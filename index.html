@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ratata</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                text-align: center;
+                background-color: #000; /* Pure black background */
+                color: #ffffff; /* White text for contrast */
+                padding: 40px 20px;
+            }
+            h1 {
+                color: #4caf50; /* Vibrant green for the headline */
+                font-size: 40px;
+                margin-bottom: 10px;
+            }
+            h2 {
+                color: #f44336; /* Bright red for the subheadline */
+                font-size: 30px;
+                margin-bottom: 20px;
+            }
+            p {
+                font-size: 18px;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+            .signup-form {
+                margin-top: 20px;
+                padding: 20px;
+                background-color: rgba(
+                    255,
+                    255,
+                    255,
+                    0.1
+                ); /* Slightly transparent white */
+                border-radius: 10px;
+                display: inline-block;
+            }
+            input[type="email"] {
+                padding: 10px;
+                margin: 5px;
+                border: none;
+                border-radius: 5px;
+                width: 250px;
+            }
+            input[type="submit"] {
+                padding: 12px 20px;
+                margin: 5px;
+                border: none;
+                border-radius: 5px;
+                background-color: #2196f3; /* Bright blue for the button */
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            input[type="submit"]:hover {
+                background-color: #0d47a1; /* Darker shade of blue for hover effect */
+            }
+            footer {
+                font-size: 12px;
+                position: fixed;
+                left: 0;
+                bottom: 10px;
+                width: 100%;
+                background-color: #000;
+                color: #fff;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <img
+            src="ratata-transparent-white.png"
+            alt="Ratata logo"
+            width="280px"
+        />
+        <p>
+            Brace yourself for an innovative leap in software technology.<br />Our
+            upcoming product promises to redefine efficiency and creativity.
+        </p>
+        <div class="signup-form">
+            <p>Join our Circle of Early Sorcerers!</p>
+            <form id="myForm">
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                />
+                <input type="submit" value="Enlist Now" />
+            </form>
+        </div>
+        <p>
+            A new era of digital wizardry is about to unfold.<br />Be a part of
+            the revolution and stay tuned for more!
+        </p>
+    </body>
+    <footer>
+        <div>
+            Copyright &copy; 2018 -
+            <script type="text/javascript">
+                document.write(new Date().getFullYear());
+            </script>
+            Ratata Technology. All rights reserved.
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        document
+            .getElementById("myForm")
+            .addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                var email = this.email.value;
+                var payload = {
+                    text: email,
+                };
+                fetch(
+                    "https://hooks.slack.com/services/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",
+                    {
+                        method: "POST",
+                        body: JSON.stringify(payload),
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                    },
+                )
+                    .then((response) => {
+                        console.log("Done");
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            });
+    </script>
+</html>
