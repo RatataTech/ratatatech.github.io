@@ -37,7 +37,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-app.post("/sendToSlack", (req, res) => {
+app.post("/", (req, res) => {
 	const email = req.body.email;
 	const payload = { text: email };
 
@@ -52,7 +52,7 @@ app.post("/sendToSlack", (req, res) => {
 });
 
 // Handle unsupported methods on this route
-app.all("/sendToSlack", (req, res) => {
+app.all("/", (req, res) => {
 	res.status(405).send("Method Not Allowed");
 });
 
