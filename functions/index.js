@@ -19,25 +19,41 @@
 // });
 
 const functions = require("firebase-functions");
-const cors = require("cors")({ origin: true });
+const express = require("express");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 const fetch = require("node-fetch");
 
-exports.sendToSlack = functions.https.onRequest((request, response) => {
-	cors(request, response, () => {
-		if (request.method !== "POST") {
-			return response.status(405).send("Method Not Allowed");
-		}
+const app = express();
 
-		const email = request.body.email;
-		const payload = { text: email };
+// Enable CORS with various options
+app.use(cors({ origin: true }));
 
-		fetch(process.env.SLACK_EMAIL_WEB_HOOK, {
-			method: "POST",
-			body: JSON.stringify(payload),
-			headers: { "Content-Type": "application/x-www-form-urlencoded" },
-		})
-			.then((res) => res.json())
-			.then((json) => response.status(200).send(json))
-			.catch((error) => response.status(500).send(error));
-	});
+// Apply rate limiting
+const limiter = rateLimit({
+	windowMs: 30 * 60 * 1000, // 30 minutes
+	max: 20, // limit each IP to 20 requests per windowMs
 });
+
+app.use(limiter);
+
+app.post("/sendToSlack", (req, res) => {
+	const email = req.body.email;
+	const payload = { text: email };
+
+	fetch(process.env.SLACK_EMAIL_WEB_HOOK, {
+		method: "POST",
+		body: JSON.stringify(payload),
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
+	})
+		.then((response) => response.json())
+		.then((json) => res.status(200).send(json))
+		.catch((error) => res.status(500).send(error));
+});
+
+// Handle unsupported methods on this route
+app.all("/sendToSlack", (req, res) => {
+	res.status(405).send("Method Not Allowed");
+});
+
+exports.sendToSlack = functions.https.onRequest(app);
