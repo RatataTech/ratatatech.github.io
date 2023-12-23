@@ -23,19 +23,21 @@ const cors = require("cors")({ origin: true });
 const fetch = require("node-fetch");
 
 exports.sendToSlack = functions.https.onRequest((request, response) => {
-	if (request.method !== "POST") {
-		return response.status(405).send("Method Not Allowed");
-	}
+	cors(request, response, () => {
+		if (request.method !== "POST") {
+			return response.status(405).send("Method Not Allowed");
+		}
 
-	const email = request.body.email;
-	const payload = { text: email };
+		const email = request.body.email;
+		const payload = { text: email };
 
-	fetch(process.env.SLACK_EMAIL_WEB_HOOK, {
-		method: "POST",
-		body: JSON.stringify(payload),
-		headers: { "Content-Type": "application/x-www-form-urlencoded" },
-	})
-		.then((res) => res.json())
-		.then((json) => response.status(200).send(json))
-		.catch((error) => response.status(500).send(error));
+		fetch(process.env.SLACK_EMAIL_WEB_HOOK, {
+			method: "POST",
+			body: JSON.stringify(payload),
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+		})
+			.then((res) => res.json())
+			.then((json) => response.status(200).send(json))
+			.catch((error) => response.status(500).send(error));
+	});
 });
