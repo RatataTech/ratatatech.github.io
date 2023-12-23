@@ -19,6 +19,7 @@
 // });
 
 const functions = require("firebase-functions");
+const cors = require("cors")({ origin: true });
 const fetch = require("node-fetch");
 
 exports.sendToSlack = functions.https.onRequest((request, response) => {
